@@ -3,6 +3,7 @@ import cv2
 import supervision as sv
 from ultralytics import YOLO
 from typing import List, Tuple
+from detections_manager import DetectionsManager
 
 
 ZONE_IN_POLYGONS = [
@@ -52,6 +53,7 @@ class VideoProcessor:
         self.video_info = sv.VideoInfo.from_video_path(video_path=source_video_path)
         self.zones_in = initiate_polygons(ZONE_IN_POLYGONS, self.video_info.resolution_wh, sv.Position.CENTER)
         self.zones_out = initiate_polygons(ZONE_OUT_POLYGONS, self.video_info.resolution_wh, sv.Position.CENTER)
+        self.detections_manager = DetectionsManager()
 
     def process_video(self) -> None:
         frame_generator = sv.get_video_frames_generator(source_path=self.source_video_path)
