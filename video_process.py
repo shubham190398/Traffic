@@ -70,6 +70,14 @@ class VideoProcessor:
         detections = sv.Detections.from_ultralytics(result)
         detections = self.tracker.update_with_detections(detections)
 
+        detections_zones_in = []
+
+        for zone_in in self.zones_in:
+            detections_zone_in = detections[zone_in.trigger(detections=detections)]
+            detections_zones_in.append(detections_zone_in)
+
+        detections = sv.Detections.merge(detections_zones_in)
+
         return self.annotate_frame(frame=frame, detections=detections)
 
     def annotate_frame(self, frame: np.ndarray, detections: sv.Detections) -> np.ndarray:
