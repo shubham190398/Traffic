@@ -1,5 +1,6 @@
 import argparse
 import numpy as np
+import cv2
 import supervision as sv
 from ultralytics import YOLO
 
@@ -18,3 +19,15 @@ class VideoProcessor:
         self.confidence_threshold = confidence_threshold
         self.iou_threshold = iou_threshold
         self.model = YOLO(source_weights_path)
+
+    def process_video(self):
+        frame_generator = sv.get_video_frames_generator(source_path=self.source_video_path)
+
+        for frame in frame_generator:
+            processed_frame = self.process_frame(frame=frame)
+            cv2.imshow("frame", processed_frame)
+
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
+        cv2.destroyAllWindows()
