@@ -1,4 +1,3 @@
-import argparse
 import numpy as np
 import cv2
 import supervision as sv
@@ -23,6 +22,7 @@ class VideoProcessor:
         self.iou_threshold = iou_threshold
         self.model = YOLO(source_weights_path)
         self.box_annotator = sv.BoxAnnotator(color=COLORS)
+        self.tracker = sv.ByteTrack()
 
     def process_video(self) -> None:
         frame_generator = sv.get_video_frames_generator(source_path=self.source_video_path)
