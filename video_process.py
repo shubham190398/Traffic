@@ -43,4 +43,7 @@ class VideoProcessor:
         return self.annotate_frame(frame=frame, detections=detections)
 
     def annotate_frame(self, frame: np.ndarray, detections: sv.Detections) -> np.ndarray:
-        pass
+        annotated_frame = frame.copy()
+        annotated_frame = self.box_annotator.annotate(scene=annotated_frame, detections=detections)
+
+        return annotated_frame
