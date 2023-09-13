@@ -5,6 +5,9 @@ import supervision as sv
 from ultralytics import YOLO
 
 
+COLORS = sv.ColorPalette.default()
+
+
 class VideoProcessor:
     def __init__(
             self,
@@ -19,6 +22,7 @@ class VideoProcessor:
         self.confidence_threshold = confidence_threshold
         self.iou_threshold = iou_threshold
         self.model = YOLO(source_weights_path)
+        self.box_annotator = sv.BoxAnnotator(color=COLORS)
 
     def process_video(self) -> None:
         frame_generator = sv.get_video_frames_generator(source_path=self.source_video_path)
@@ -37,3 +41,6 @@ class VideoProcessor:
         detections = sv.Detections.from_ultralytics(result)
 
         return self.annotate_frame(frame=frame, detections=detections)
+
+    def annotate_frame(self, frame: np.ndarray, detections: sv.Detections) -> np.ndarray:
+        pass
