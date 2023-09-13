@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 import supervision as sv
 from ultralytics import YOLO
+from typing import List, Tuple
 
 
 ZONE_IN_POLYGONS = [
@@ -19,6 +20,17 @@ ZONE_OUT_POLYGONS = [
 ]
 
 COLORS = sv.ColorPalette.default()
+
+
+def initiate_polygons(
+        polygons: List[np.ndarray],
+        frame_resolution: Tuple[int, int],
+        triggering_position: sv.Position = sv.Position.CENTER,
+) -> List[sv.PolygonZone]:
+    return [
+        sv.PolygonZone(polygon=polygon, frame_resolution_wh=frame_resolution, triggering_position=triggering_position)
+        for polygon in polygons
+    ]
 
 
 class VideoProcessor:
