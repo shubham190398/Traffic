@@ -20,7 +20,7 @@ class VideoProcessor:
         self.iou_threshold = iou_threshold
         self.model = YOLO(source_weights_path)
 
-    def process_video(self):
+    def process_video(self) -> None:
         frame_generator = sv.get_video_frames_generator(source_path=self.source_video_path)
 
         for frame in frame_generator:
@@ -31,3 +31,9 @@ class VideoProcessor:
                 break
 
         cv2.destroyAllWindows()
+
+    def process_frame(self, frame: np.ndarray) -> np.ndarray:
+        result = self.model(frame, verbose=False, conf=self.confidence_threshold, iou=self.iou_threshold)[0]
+        detections = sv.Detections.from_ultralytics(result)
+
+        return self.annotate_frame(frame=frame, detections=detections)
