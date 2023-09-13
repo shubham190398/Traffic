@@ -74,6 +74,11 @@ class VideoProcessor:
 
     def annotate_frame(self, frame: np.ndarray, detections: sv.Detections) -> np.ndarray:
         annotated_frame = frame.copy()
+
+        for i, (zone_in, zone_out) in enumerate(zip(self.zones_in, self.zones_out)):
+            annotated_frame = sv.draw_polygon(scene=annotated_frame, polygon=zone_in.polygon, color=COLORS.colors[i])
+            annotated_frame = sv.draw_polygon(scene=annotated_frame, polygon=zone_out.polygon, color=COLORS.colors[i])
+
         labels = [
             f"{tracker_id}"
             for tracker_id in detections.tracker_id
