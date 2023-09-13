@@ -39,11 +39,16 @@ class VideoProcessor:
     def process_frame(self, frame: np.ndarray) -> np.ndarray:
         result = self.model(frame, verbose=False, conf=self.confidence_threshold, iou=self.iou_threshold)[0]
         detections = sv.Detections.from_ultralytics(result)
+        detections = self.tracker.update_with_detections(detections)
 
         return self.annotate_frame(frame=frame, detections=detections)
 
     def annotate_frame(self, frame: np.ndarray, detections: sv.Detections) -> np.ndarray:
         annotated_frame = frame.copy()
-        annotated_frame = self.box_annotator.annotate(scene=annotated_frame, detections=detections)
+        labels = [
+            f"{tracker_id}"
+            for tracker_id in detections.tracker_id
+        ]
+        annotated_frame = self.box_annotator.annotate(scene=annotated_frame, detections=detections, labels=labels)
 
         return annotated_frame
