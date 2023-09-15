@@ -1,5 +1,5 @@
 import numpy as np
-import cv2
+from tqdm import tqdm
 import supervision as sv
 from ultralytics import YOLO
 from typing import List, Tuple
@@ -59,14 +59,10 @@ class VideoProcessor:
     def process_video(self) -> None:
         frame_generator = sv.get_video_frames_generator(source_path=self.source_video_path)
 
-        for frame in frame_generator:
-            processed_frame = self.process_frame(frame=frame)
-            cv2.imshow("frame", processed_frame)
-
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-
-        cv2.destroyAllWindows()
+        with sv.VideoSink(self.target_video_path, self.video_info) as sink:
+            for frame in tqdm(frame_generator, total=self.video_info.total_frames):
+                processed_frame = self.process_frame(frame=frame)
+                sink.write_frame(processed_frame)
 
     def process_frame(self, frame: np.ndarray) -> np.ndarray:
         result = self.model(frame, verbose=False, conf=self.confidence_threshold, iou=self.iou_threshold)[0]
