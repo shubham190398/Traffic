@@ -1,4 +1,5 @@
 import argparse
+from video_process import VideoProcessor
 
 
 if __name__ == "__main__":
@@ -19,3 +20,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "--iou_threshold", default=0.7, help="IOU threshold", type=float
     )
+
+    args = parser.parse_args()
+    processor = VideoProcessor(
+        source_weights_path=args.source_weights_path,
+        source_video_path=args.source_video_path,
+        target_video_path=args.target_video_path,
+        confidence_threshold=args.confidence_threhsold,
+        iou_threshold=args.iou_threshold
+    )
+
+    processor.process_video()
