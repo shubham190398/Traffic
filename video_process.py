@@ -74,14 +74,18 @@ class VideoProcessor:
         detections = self.tracker.update_with_detections(detections)
 
         detections_zones_in = []
+        detections_zones_out = []
 
-        for zone_in in self.zones_in:
+        for zone_in, zone_out in zip(self.zones_in, self.zones_out):
             detections_zone_in = detections[zone_in.trigger(detections=detections)]
             detections_zones_in.append(detections_zone_in)
+            detections_zone_out = detections[zone_out.trigger(detections=detections)]
+            detections_zones_out.append(detections_zone_out)
 
         detections = self.detections_manager.update(
             detections=detections,
             detections_zones_in=detections_zones_in,
+            detections_zones_out=detections_zones_out,
         )
         return self.annotate_frame(frame=frame, detections=detections)
 
