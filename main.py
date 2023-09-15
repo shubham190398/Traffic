@@ -26,7 +26,7 @@ if __name__ == "__main__":
         source_weights_path=args.source_weights_path,
         source_video_path=args.source_video_path,
         target_video_path=args.target_video_path,
-        confidence_threshold=args.confidence_threhsold,
+        confidence_threshold=args.confidence_threshold,
         iou_threshold=args.iou_threshold
     )
 
