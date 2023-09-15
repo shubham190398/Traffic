@@ -1,4 +1,4 @@
 numpy~=1.25.2
-supervision~=0.14.0
 ultralytics~=8.0.176
 opencv-python~=4.8.0.76
+supervision~=0.15.0rc1

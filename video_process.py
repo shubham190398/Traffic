@@ -49,6 +49,7 @@ class VideoProcessor:
         self.iou_threshold = iou_threshold
         self.model = YOLO(source_weights_path)
         self.box_annotator = sv.BoxAnnotator(color=COLORS)
+        self.trace_annotator = sv.TraceAnnotator(color=COLORS, thickness=2, trace_length=100)
         self.tracker = sv.ByteTrack()
         self.video_info = sv.VideoInfo.from_video_path(video_path=source_video_path)
         self.zones_in = initiate_polygons(ZONE_IN_POLYGONS, self.video_info.resolution_wh, sv.Position.CENTER)
@@ -96,5 +97,6 @@ class VideoProcessor:
             for tracker_id in detections.tracker_id
         ]
         annotated_frame = self.box_annotator.annotate(scene=annotated_frame, detections=detections, labels=labels)
+        annotated_frame = self.trace_annotator.annotate(scene=annotated_frame, detections=detections)
 
         return annotated_frame
