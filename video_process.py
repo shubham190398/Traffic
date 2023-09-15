@@ -103,4 +103,20 @@ class VideoProcessor:
         annotated_frame = self.box_annotator.annotate(scene=annotated_frame, detections=detections, labels=labels)
         annotated_frame = self.trace_annotator.annotate(scene=annotated_frame, detections=detections)
 
+        for zone_out_id, zone_out in enumerate(self.zones_out):
+            zone_center = sv.get_polygon_center(polygon=zone_out.polygon)
+
+            if zone_out_id in self.detections_manager.recorded_paths:
+                paths = self.detections_manager.recorded_paths[zone_out_id]
+
+                for i, zone_in_id in enumerate(paths):
+                    count = len(paths[zone_in_id])
+                    text_anchor = sv.Point(x=zone_center.x, y=zone_center.y + 40 * i)
+                    annotated_frame = sv.draw_text(
+                        scene=annotated_frame,
+                        text=f"{count}",
+                        text_anchor=text_anchor,
+                        background_color=COLORS.colors[zone_in_id]
+                    )
+
         return annotated_frame
